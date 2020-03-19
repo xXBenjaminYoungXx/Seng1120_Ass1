@@ -46,6 +46,7 @@
 //Macroguard to prevent multiple compilations of LinkedList class
 #ifndef ASSIGNMENT1_LINKEDLIST_H
 #define ASSIGNMENT1_LINKEDLIST_H
+#include <iostream> //Used for error/debugging messages only
 #include <string>
 #include "Node.h"
 using namespace std;
@@ -61,23 +62,47 @@ public:
     LinkedList();
 
     //Further defined constructors
-    LinkedList(var_type sentence);
+    LinkedList(var_type str);
 
     //Destructor
     ~LinkedList();
 
-    //Getter and Setter Functions
-    void add(var_type sentence);
+    // Functions that add functionality to the linked list
+    void add(var_type str);
+
+    int count(var_type str);
+    //Pre-Condition: Takes instance of var_type, named str.
+    //
+    //Post-Condition: Returns Int with a value based on the number of matching var_type instances as str
+
+    void remove(var_type str);
+    //Pre-Condition: Takes instance of var_type, named str.
+
+    var_type* getListLine();
+    //Post-Condition: Returns pointer to string which contains list data
 
     //Member Overloads
+    //L1 += L2 overload requires concatenation of the two list var_type
+    LinkedList& operator += (LinkedList& L2);
 
 //Private member variables
 private:
     Node* head;
     Node* tail;
     Node* current;
+
+    //private functions
+    void addNode(var_type str);
+    //Pre-Condition: Takes pointer to var_type and stores it in new node
+
+    void segWords(var_type& str);
+    //Pre-Condition: Takes reference of type Var_type
+    //
+    //Post-Condition: Returns 1 for successful process, 0 otherwise
 };
 
 //Non-Member Overloads
+//<< Requires that the variable type var_type should be printed to the screen using ostream object
+ostream& operator << (ostream& out, LinkedList& list);
 
 #endif //ASSIGNMENT1_LINKEDLIST_H

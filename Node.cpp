@@ -25,7 +25,10 @@ Node::Node(Node* P, Node* N, var_type* D)
     data = D;
 }
 
-Node::~Node(){}
+Node::~Node()
+{
+
+}
 
 Node* Node::getP() const
 {
