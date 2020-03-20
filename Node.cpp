@@ -13,16 +13,16 @@
 
 Node::Node()
 {
-    next = NULL;
-    prev = NULL;
-    data = NULL;
+    NEXT = NULL;
+    PREV = NULL;
+    DATA = NULL;
 }
 
 Node::Node(Node* P, Node* N, var_type* D)
 {
-    next = N;
-    prev = P;
-    data = D;
+    NEXT = N;
+    PREV = P;
+    DATA = D;
 }
 
 Node::~Node()
@@ -32,30 +32,30 @@ Node::~Node()
 
 Node* Node::getP() const
 {
-    return prev;
+    return PREV;
 }
 
 Node* Node::getN() const
 {
-    return next;
+    return NEXT;
 }
 
 var_type* Node::getD() const
 {
-    return data;
+    return DATA;
 }
 
 void Node::setP(Node* p)
 {
-    prev = p;
+    PREV = p;
 }
 
 void Node::setN(Node* n)
 {
-    next = n;
+    NEXT = n;
 }
 
 void Node::setD(var_type* d)
 {
-    data = d;
+    DATA = d;
 }

@@ -13,19 +13,30 @@
 
 LinkedList::LinkedList()
 {
-    head = NULL;
-    tail = NULL;
-    current = NULL;
+    HEAD = NULL;
+    TAIL = NULL;
+    CURRENT = NULL;
 }
 /**********************************************************************************************************************/
 LinkedList::LinkedList(var_type str)
 {
-    segWords(str);
+    segWords(str);//Added this in as it would make sense for this class constructor.
 }
 /**********************************************************************************************************************/
 LinkedList::~LinkedList()
 {
-    //********************************************************************************************
+    //Temporary buff on stack
+    Node* buff;
+
+    CURRENT = HEAD;
+
+    //Destroy nodes
+    for(;CURRENT != NULL;)
+    {
+        buff = CURRENT->getN();
+        delete(CURRENT);
+        CURRENT = buff;
+    }
 }
 /**********************************************************************************************************************/
 void LinkedList::add(var_type str)
@@ -33,29 +44,97 @@ void LinkedList::add(var_type str)
     segWords(str);
 }
 /**********************************************************************************************************************/
-int LinkedList::count(var_type str)
+unsigned int LinkedList::count(const var_type& str)
 {
-    current = head;
+    CURRENT = HEAD;
     //Looks through Nodes and increments if match is present
     unsigned int count = 0;
 
-    for(;current != NULL;)
+    for(;CURRENT != NULL;)
     {
-        if((current->getD())->compare(str) == 0)//A match, Increment
+        if(*(CURRENT->getD()) == str)//A match, Increment
         {
             count++;
         }
 
-        current = current->getN();
+        CURRENT = CURRENT->getN();
     }
 
     return count;
 }
 /**********************************************************************************************************************/
-void LinkedList::remove(var_type str)
+bool LinkedList::doesExist(Node* N)
 {
-    //Break str into words
-    //Delete words
+    Node* buff = HEAD;//create temp pointer as CURRENT is being used in calling process
+
+    for(;buff != NULL;)
+    {
+        if(buff == N)
+        {
+            return true;
+        }
+
+        buff = buff->getN();
+    }
+    return false;
+}
+/**********************************************************************************************************************/
+int LinkedList::removeNode(Node* toRem)
+{
+    //As calling uses CURRENT we must create a buff
+    Node* buff = NULL;
+
+    //Need to see if Node is head or tail
+    if(toRem == HEAD)
+    {
+        buff = HEAD;
+        HEAD = HEAD->getN();//Change HEAD
+        HEAD->setP(NULL);//Change new HEAD previous
+        delete (buff);//Destroy Node
+        return 1;
+
+    }else if(toRem == TAIL)
+    {
+        buff = TAIL;
+        TAIL = TAIL->getP();//Change tail
+        TAIL->setN(NULL);//Change new tail next
+        delete(buff);//Destroy Node
+        return 2;
+
+    } else if(doesExist(toRem))//Pointer may point to non HEAD/tail node or none at all
+    {
+        buff = toRem;
+        //Change right node properties
+        buff->getN()->setP(buff->getP());//Set right prev pointer to CURRENT prev
+        //Change left Node properties
+        buff->getP()->setN(buff->getN());
+        //Delete node
+        delete(buff);
+
+        return 3;
+    } else
+    {
+        return 0;
+    }
+}
+/**********************************************************************************************************************/
+void LinkedList::remove(const var_type& str)
+{
+    CURRENT = HEAD;
+
+    for(;CURRENT != NULL;)
+    {
+
+        if(*(CURRENT->getD()) == str)
+        {
+            Node* buff = CURRENT->getN();
+            removeNode(CURRENT);
+            CURRENT = buff;
+            continue;
+        }
+
+        CURRENT = CURRENT->getN();
+    }
 }
 /**********************************************************************************************************************/
 var_type* LinkedList::getListLine()
@@ -63,15 +142,15 @@ var_type* LinkedList::getListLine()
     //Create string buffer
     var_type* buff = new string();
 
-    //Reset current
-    current = head;
+    //Reset CURRENT
+    CURRENT = HEAD;
 
     //For loop
-    for(;current != NULL;)
+    for(;CURRENT != NULL;)
     {
-        buff->append(*(current->getD()));
+        buff->append(*(CURRENT->getD()));
         buff->append(" ");
-        current = current->getN();
+        CURRENT = CURRENT->getN();
     }
 
     return buff;
@@ -80,36 +159,34 @@ var_type* LinkedList::getListLine()
 LinkedList& LinkedList::operator += (LinkedList& L2)
 {
     //Take out strings from L2 and use add node to add to l1
-    //Reset current
-
     segWords(*(L2.getListLine()));
 }
 /**********************************************************************************************************************/
-void LinkedList::addNode(var_type str) {
+void LinkedList::addNode(const var_type& str) {
     //Put on heap with pointer
     var_type *pStr = new string(str);
 
-    //See if head node is null
-    if (head == NULL) {
+    //See if HEAD node is null
+    if (HEAD == NULL) {
         //it is, therefore a list has not been created yet
-        head = new Node(NULL, NULL, pStr);
-        //Tail now becomes head
-        tail = head;
-        //Current is referenced with recently modified/viewed Node
-        current = head;
-        //std::cout << "NODE: " << *(head->getD()) << std::endl;
+        HEAD = new Node(NULL, NULL, pStr);
+        //TAIL now becomes HEAD
+        TAIL = HEAD;
+        //CURRENT is referenced with recently modified/viewed Node
+        CURRENT = HEAD;
+        //std::cout << "NODE: " << *(HEAD->getD()) << std::endl;
         return;
     }
 
-    //std::cout << "NODE: " << *(current->getD()) << std::endl;
+    //std::cout << "NODE: " << *(CURRENT->getD()) << std::endl;
 
     //If not see if next nodes are null.. ie free.
-    current = tail;//Ensure we are at end of list
-    current = new Node(current, NULL, pStr);//new node data updated
-    tail = current;//Change to new tail
-    current->getP()->setN(current);//set next node to this node on previous node
+    CURRENT = TAIL;//Ensure we are at end of list
+    CURRENT = new Node(CURRENT, NULL, pStr);//new node data updated
+    TAIL = CURRENT;//Change to new TAIL
+    CURRENT->getP()->setN(CURRENT);//set next node to this node on previous node
 
-    //std::cout << "NODE: " << *(current->getD()) << std::endl;
+    //std::cout << "NODE: " << *(CURRENT->getD()) << std::endl;
 }
 /**********************************************************************************************************************/
 void LinkedList::segWords(var_type& str)
@@ -133,7 +210,7 @@ void LinkedList::segWords(var_type& str)
     for(unsigned int i = 0; ; i++)
     {//loop to segregate remaining words
 
-        end = str.find(' ',start+1);//Find where current word ends
+        end = str.find(' ',start+1);//Find where CURRENT word ends
 
         if(end > str.find_last_of(' ',str.size())) //If true 'find' function has hit string limit
         {
@@ -149,10 +226,6 @@ void LinkedList::segWords(var_type& str)
         //catch up
         start = end;
 
-        if(i == 300)
-        {
-            std::cout << "Warning: Process exceeded 300 loops" << std::endl << "segWords function" << std::endl;
-        }
     }
 
     //Will probably come across memory issues WELL before this happens
@@ -161,6 +234,6 @@ void LinkedList::segWords(var_type& str)
 ostream& operator << (ostream& out, LinkedList& list)
 {
     //Required operation is to print out the components of each node in order
-    cout << *(list.getListLine());
-    return cout;
+    out << *(list.getListLine());
+    return out;
 }

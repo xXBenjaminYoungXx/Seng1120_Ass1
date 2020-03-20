@@ -46,9 +46,13 @@
 //Macroguard to prevent multiple compilations of LinkedList class
 #ifndef ASSIGNMENT1_LINKEDLIST_H
 #define ASSIGNMENT1_LINKEDLIST_H
-#include <iostream> //Used for error/debugging messages only
+
+//#include <iostream> //Used for debugging messages only
 #include <string>
 #include "Node.h"
+#define CURRENT current
+#define HEAD head
+#define TAIL tail
 using namespace std;
 
 typedef string var_type;
@@ -70,12 +74,13 @@ public:
     // Functions that add functionality to the linked list
     void add(var_type str);
 
-    int count(var_type str);
+    unsigned int count(const var_type& str);
     //Pre-Condition: Takes instance of var_type, named str.
     //
     //Post-Condition: Returns Int with a value based on the number of matching var_type instances as str
 
-    void remove(var_type str);
+
+    void remove(const var_type& str);
     //Pre-Condition: Takes instance of var_type, named str.
 
     var_type* getListLine();
@@ -87,13 +92,23 @@ public:
 
 //Private member variables
 private:
-    Node* head;
-    Node* tail;
-    Node* current;
+    Node* HEAD;
+    Node* TAIL;
+    Node* CURRENT;
 
     //private functions
-    void addNode(var_type str);
+    void addNode(const var_type& str);
     //Pre-Condition: Takes pointer to var_type and stores it in new node
+
+    bool doesExist(Node* N);
+    //Pre-Condition: Pointer to Node under question of existing
+    //
+    //Post-Condition: True if it exists, False otherwise
+
+    int removeNode(Node* toRem);
+    //Pre-Condition: Takes pointer to node that will be removed
+    //
+    //Post-Condition: Returns 0 if Node does not exist, 1 if it deleted HEAD, 2 tail, 3 other
 
     void segWords(var_type& str);
     //Pre-Condition: Takes reference of type Var_type

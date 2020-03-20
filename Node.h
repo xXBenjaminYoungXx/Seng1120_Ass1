@@ -21,6 +21,10 @@
 #ifndef ASSIGNMENT1_NODE_H
 #define ASSIGNMENT1_NODE_H
 
+#define NEXT next
+#define PREV prev
+#define DATA data
+
 //Required Library files/classes/namespaces
 #include <string>
 using namespace std;
@@ -64,9 +68,9 @@ public:
 
 //Private member variables
 private:
-    Node* next;
-    Node* prev;
-    string* data;
+    Node* NEXT;
+    Node* PREV;
+    string* DATA;
 };
 
 //Non-Member Overloads
