@@ -118,7 +118,7 @@ int LinkedList::removeNode(Node* toRem)
     }
 }
 /**********************************************************************************************************************/
-void LinkedList::remove(const var_type& str)
+void LinkedList::removeData(const var_type& str)
 {
     CURRENT = HEAD;
 
@@ -134,6 +134,66 @@ void LinkedList::remove(const var_type& str)
         }
 
         CURRENT = CURRENT->getN();
+    }
+}
+/**********************************************************************************************************************/
+void LinkedList::remove(const var_type& str)
+{
+    //For loop to count strings
+    unsigned int count = 1;//Starts at one as to include starting word
+    unsigned int currCount = 0;
+    unsigned int currIndex = 0;
+    unsigned int prevIndex = 0;
+    Node* buff;
+
+    for(unsigned int i = 0; i < str.size();)//As long as index remains below max
+    {
+        i = str.find(' ', i+1);//find whitespace
+
+        if(i > str.size())
+        {
+            //Do not increment, leave
+            break;
+        } else if((i+1)<str.size()){//Make sure white space is not last character
+            count++;
+        }
+    }
+
+    CURRENT = HEAD;
+
+    for(;CURRENT != NULL;)
+    {
+        currIndex = str.find(*(CURRENT->getD)(),0);
+
+        if(currIndex < str.size())//Does word exist?
+        {
+            if((currCount == 0) || (currIndex > prevIndex))//is it found after last found word, or is it the first word?
+            {
+                prevIndex = currIndex;
+                currCount++;
+
+                if(count == currCount)//Is it the last word to find
+                {
+                    for(;currCount != 0; currCount--)
+                    {
+                        buff = CURRENT->getP();
+                        removeNode(CURRENT);
+                        CURRENT = buff;
+                    }
+                    continue;
+                }
+
+                CURRENT = CURRENT->getN();
+            } else//Word not in order as needed
+            {
+                currCount = 0;
+                //Current CURRENT might be the start of a streak, dont get next
+            }
+        } else//Word not found, streak broken
+        {
+            currCount = 0;
+            CURRENT = CURRENT->getN();
+        }
     }
 }
 /**********************************************************************************************************************/
@@ -160,6 +220,7 @@ LinkedList& LinkedList::operator += (LinkedList& L2)
 {
     //Take out strings from L2 and use add node to add to l1
     segWords(*(L2.getListLine()));
+    return *this;
 }
 /**********************************************************************************************************************/
 void LinkedList::addNode(const var_type& str) {

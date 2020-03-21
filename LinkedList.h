@@ -47,7 +47,7 @@
 #ifndef ASSIGNMENT1_LINKEDLIST_H
 #define ASSIGNMENT1_LINKEDLIST_H
 
-//#include <iostream> //Used for debugging messages only
+#include <iostream> //Used for debugging messages only
 #include <string>
 #include "Node.h"
 #define CURRENT current
@@ -109,6 +109,9 @@ private:
     //Pre-Condition: Takes pointer to node that will be removed
     //
     //Post-Condition: Returns 0 if Node does not exist, 1 if it deleted HEAD, 2 tail, 3 other
+
+    void removeData(const var_type& str);
+    //Pre-Condition: takes reference to data type existent on node
 
     void segWords(var_type& str);
     //Pre-Condition: Takes reference of type Var_type
