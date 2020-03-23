@@ -18,10 +18,10 @@ LinkedList::LinkedList()
     CURRENT = NULL;
 }
 /**********************************************************************************************************************/
-LinkedList::LinkedList(var_type str)
+/*LinkedList::LinkedList(var_type str)
 {
     segWords(str);//Added this in as it would make sense for this class constructor.
-}
+}*/
 /**********************************************************************************************************************/
 LinkedList::~LinkedList()
 {
@@ -31,7 +31,7 @@ LinkedList::~LinkedList()
     CURRENT = HEAD;
 
     //Destroy nodes
-    for(;CURRENT != NULL;)
+    while(CURRENT != NULL)
     {
         buff = CURRENT->getN();
         delete(CURRENT);
@@ -50,7 +50,7 @@ unsigned int LinkedList::count(const var_type& str)
     //Looks through Nodes and increments if match is present
     unsigned int count = 0;
 
-    for(;CURRENT != NULL;)
+    while(CURRENT != NULL)
     {
         if(*(CURRENT->getD()) == str)//A match, Increment
         {
@@ -67,7 +67,7 @@ bool LinkedList::doesExist(Node* N)
 {
     Node* buff = HEAD;//create temp pointer as CURRENT is being used in calling process
 
-    for(;buff != NULL;)
+    while(buff != NULL)
     {
         if(buff == N)
         {
@@ -118,11 +118,11 @@ int LinkedList::removeNode(Node* toRem)
     }
 }
 /**********************************************************************************************************************/
-void LinkedList::removeData(const var_type& str)
+/*void LinkedList::removeData(const var_type& str)//Function Not used, but kept as comment anyways
 {
     CURRENT = HEAD;
 
-    for(;CURRENT != NULL;)
+    while(CURRENT != NULL)
     {
 
         if(*(CURRENT->getD()) == str)
@@ -135,11 +135,11 @@ void LinkedList::removeData(const var_type& str)
 
         CURRENT = CURRENT->getN();
     }
-}
+}*/
 /**********************************************************************************************************************/
 void LinkedList::remove(const var_type& str)
 {
-    //For loop to count strings
+    //For loop to count var_types
     unsigned int count = 1;//Starts at one as to include starting word
     unsigned int currCount = 0;
     unsigned int currIndex = 0;
@@ -159,9 +159,12 @@ void LinkedList::remove(const var_type& str)
         }
     }
 
+    //The above for loop should be turned into an independent public function, but because this is not used anywhere
+    //else I just got lazy and wrote it here
+
     CURRENT = HEAD;
 
-    for(;CURRENT != NULL;)
+    while(CURRENT != NULL)
     {
         currIndex = str.find(*(CURRENT->getD)(),0);
 
@@ -199,14 +202,14 @@ void LinkedList::remove(const var_type& str)
 /**********************************************************************************************************************/
 var_type* LinkedList::getListLine()
 {
-    //Create string buffer
-    var_type* buff = new string();
+    //Create var_type buffer
+    var_type* buff = new var_type();
 
     //Reset CURRENT
     CURRENT = HEAD;
 
     //For loop
-    for(;CURRENT != NULL;)
+    while(CURRENT != NULL)
     {
         buff->append(*(CURRENT->getD()));
         buff->append(" ");
@@ -218,14 +221,20 @@ var_type* LinkedList::getListLine()
 /**********************************************************************************************************************/
 LinkedList& LinkedList::operator += (LinkedList& L2)
 {
-    //Take out strings from L2 and use add node to add to l1
+    //Take out var_types from L2 and use add node to add to l1
     segWords(*(L2.getListLine()));
     return *this;
 }
 /**********************************************************************************************************************/
 void LinkedList::addNode(const var_type& str) {
     //Put on heap with pointer
-    var_type *pStr = new string(str);
+    var_type *pStr = new var_type(str);
+
+    //If words dont  exist
+    if(str.size() == 0)
+    {
+        return;
+    }
 
     //See if HEAD node is null
     if (HEAD == NULL) {
@@ -235,19 +244,14 @@ void LinkedList::addNode(const var_type& str) {
         TAIL = HEAD;
         //CURRENT is referenced with recently modified/viewed Node
         CURRENT = HEAD;
-        //std::cout << "NODE: " << *(HEAD->getD()) << std::endl;
         return;
     }
-
-    //std::cout << "NODE: " << *(CURRENT->getD()) << std::endl;
 
     //If not see if next nodes are null.. ie free.
     CURRENT = TAIL;//Ensure we are at end of list
     CURRENT = new Node(CURRENT, NULL, pStr);//new node data updated
     TAIL = CURRENT;//Change to new TAIL
     CURRENT->getP()->setN(CURRENT);//set next node to this node on previous node
-
-    //std::cout << "NODE: " << *(CURRENT->getD()) << std::endl;
 }
 /**********************************************************************************************************************/
 void LinkedList::segWords(var_type& str)
@@ -260,10 +264,14 @@ void LinkedList::segWords(var_type& str)
     //Get first token as to avoid issues
     end = str.find(' ',start);
 
-    //**Input node**
-    addNode(str.substr(start,end));
+    if(end > str.size())//Only one word or no word
+    {
+        addNode(str);
+        return;
+    }
 
-    //std::cout << str.substr(start,end) << std::endl;
+    //Input node
+    addNode(str.substr(start,end));
 
     //catch up
     start = end;
@@ -273,23 +281,21 @@ void LinkedList::segWords(var_type& str)
 
         end = str.find(' ',start+1);//Find where CURRENT word ends
 
-        if(end > str.find_last_of(' ',str.size())) //If true 'find' function has hit string limit
+        if(end > str.find_last_of(' ',str.size())) //If true 'find' function has hit var_type limit
         {
-            //**Input final node**
+            //Input final node
             addNode(str.substr(start+1,str.size()));
-            //std::cout << str.substr(start+1,str.size()) << std::endl;
             return;
         }
 
-        //**Input Node :
+        //Input Node
         addNode(str.substr(start+1,end-(start+1)));
-        //std::cout << str.substr(start+1,end-(start+1)) << std::endl;
+
         //catch up
         start = end;
-
     }
 
-    //Will probably come across memory issues WELL before this happens
+    //I feel like I could improve this function to be more readable and efficient, however it does the task ¯\_(ツ)_/¯
 }
 /**********************************************************************************************************************/
 ostream& operator << (ostream& out, LinkedList& list)

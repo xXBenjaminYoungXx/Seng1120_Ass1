@@ -27,7 +27,7 @@ Node::Node(Node* P, Node* N, var_type* D)
 
 Node::~Node()
 {
-
+    delete(DATA);
 }
 
 Node* Node::getP() const
@@ -54,8 +54,8 @@ void Node::setN(Node* n)
 {
     NEXT = n;
 }
-
+/*
 void Node::setD(var_type* d)
 {
     DATA = d;
-}
+}*/

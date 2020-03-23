@@ -47,7 +47,6 @@
 #ifndef ASSIGNMENT1_LINKEDLIST_H
 #define ASSIGNMENT1_LINKEDLIST_H
 
-#include <iostream> //Used for debugging messages only
 #include <string>
 #include "Node.h"
 #define CURRENT current
@@ -66,7 +65,7 @@ public:
     LinkedList();
 
     //Further defined constructors
-    LinkedList(var_type str);
+    //LinkedList(var_type str);
 
     //Destructor
     ~LinkedList();
@@ -82,24 +81,24 @@ public:
 
     void remove(const var_type& str);
     //Pre-Condition: Takes instance of var_type, named str.
+    //
+    //
 
-    var_type* getListLine();
-    //Post-Condition: Returns pointer to string which contains list data
+    var_type* getListLine();//Used in << overload
+    //Post-Condition: Returns pointer to var_type which contains list data
+    //
+    //
 
     //Member Overloads
-    //L1 += L2 overload requires concatenation of the two list var_type
-    LinkedList& operator += (LinkedList& L2);
+    LinkedList& operator += (LinkedList& L2);//L1 += L2 overload requires concatenation of the two list var_type
 
-//Private member variables
+//Private member variables/functions
 private:
     Node* HEAD;
     Node* TAIL;
     Node* CURRENT;
 
     //private functions
-    void addNode(const var_type& str);
-    //Pre-Condition: Takes pointer to var_type and stores it in new node
-
     bool doesExist(Node* N);
     //Pre-Condition: Pointer to Node under question of existing
     //
@@ -110,8 +109,13 @@ private:
     //
     //Post-Condition: Returns 0 if Node does not exist, 1 if it deleted HEAD, 2 tail, 3 other
 
-    void removeData(const var_type& str);
+    //void removeData(const var_type& str);//Not used
     //Pre-Condition: takes reference to data type existent on node
+
+    void addNode(const var_type& str);
+    //Pre-Condition: Takes pointer to var_type and stores it in new node
+    //
+    //
 
     void segWords(var_type& str);
     //Pre-Condition: Takes reference of type Var_type

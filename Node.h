@@ -61,7 +61,7 @@ public:
     void setN(Node* n);
     //Pre-condition: requires node pointer to next node
 
-    void setD(var_type* d);
+    //void setD(var_type* d);
     //Pre-condition: requires var_type pointer to var_type
 
     //Member Overloads
