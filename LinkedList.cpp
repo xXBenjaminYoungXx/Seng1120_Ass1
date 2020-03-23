@@ -20,7 +20,7 @@ LinkedList::LinkedList()
 /**********************************************************************************************************************/
 /*LinkedList::LinkedList(var_type str)
 {
-    segWords(str);//Added this in as it would make sense for this class constructor.
+    sepWords(str);//Added this in as it would make sense for this class constructor.
 }*/
 /**********************************************************************************************************************/
 LinkedList::~LinkedList()
@@ -41,7 +41,7 @@ LinkedList::~LinkedList()
 /**********************************************************************************************************************/
 void LinkedList::add(var_type str)
 {
-    segWords(str);
+    sepWords(str);
 }
 /**********************************************************************************************************************/
 unsigned int LinkedList::count(const var_type& str)
@@ -222,7 +222,7 @@ var_type* LinkedList::getListLine()
 LinkedList& LinkedList::operator += (LinkedList& L2)
 {
     //Take out var_types from L2 and use add node to add to l1
-    segWords(*(L2.getListLine()));
+    sepWords(*(L2.getListLine()));
     return *this;
 }
 /**********************************************************************************************************************/
@@ -254,7 +254,7 @@ void LinkedList::addNode(const var_type& str) {
     CURRENT->getP()->setN(CURRENT);//set next node to this node on previous node
 }
 /**********************************************************************************************************************/
-void LinkedList::segWords(var_type& str)
+void LinkedList::sepWords(var_type& str)
 {
     //Separate str into individual words/tokens
     //Begin By declaring necessary var
@@ -277,7 +277,7 @@ void LinkedList::segWords(var_type& str)
     start = end;
 
     for(unsigned int i = 0; ; i++)
-    {//loop to segregate remaining words
+    {//loop to separate remaining words
 
         end = str.find(' ',start+1);//Find where CURRENT word ends
 

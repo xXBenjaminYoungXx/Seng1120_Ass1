@@ -117,7 +117,7 @@ private:
     //
     //
 
-    void segWords(var_type& str);
+    void sepWords(var_type& str);
     //Pre-Condition: Takes reference of type Var_type
     //
     //Post-Condition: Returns 1 for successful process, 0 otherwise
